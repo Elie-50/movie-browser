@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { searchMovies } from "@/redux/features/movies/searchSlice";
@@ -6,6 +6,8 @@ import { useDebounce } from "use-debounce";
 import { Search } from "lucide-react";
 import { InputGroup, InputGroupInput, InputGroupAddon } from "@/components/ui/input-group";
 import SearchMovieItem from "@/components/movie-components/SearchMovieItem";
+import Loading from "@/components/Loading";
+import { gsap } from "gsap";
 
 export default function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,10 +20,8 @@ export default function SearchPage() {
   const dispatch = useAppDispatch();
   const { result, loading, error } = useAppSelector((state) => state.search);
 
-  // Update URL when debounced query changes
   useEffect(() => {
     if (debouncedQuery.trim()) {
-      // Keep current page from URL or default to 1
       dispatch(searchMovies({ s: debouncedQuery, page }));
     }
   }, [debouncedQuery, page, dispatch]);
@@ -30,6 +30,22 @@ export default function SearchPage() {
     setSearchParams({ s: debouncedQuery, page: newPage.toString() });
     dispatch(searchMovies({ s: debouncedQuery, page: newPage }));
   };
+
+  useLayoutEffect(() => {
+    if (!result?.Search) return;
+
+    const ctx = gsap.context(() => {
+      gsap.from(".movie-item", {
+        opacity: 0,
+        y: 20,
+        duration: 0.35,
+        stagger: 0.08,
+        ease: "power2.out",
+      });
+    });
+
+    return () => ctx.revert();
+  }, [result?.Search]);
 
   return (
     <div className="max-w-6xl mx-auto p-4 mb-20">
@@ -48,19 +64,23 @@ export default function SearchPage() {
           </InputGroupAddon>
           {result?.totalResults && (
             <InputGroupAddon align="inline-end">
-              {result.totalResults} result{parseInt(result.totalResults) > 1 ? "s" : ""}
+              {result.totalResults} result
+              {parseInt(result.totalResults) > 1 ? "s" : ""}
             </InputGroupAddon>
           )}
         </InputGroup>
       </div>
 
-      {loading && <p>Loading...</p>}
+      {loading && <Loading />}
       {error && <p className="text-destructive">Error: {error}</p>}
       {!loading && !error && result?.Search?.length === 0 && <p>No results found.</p>}
 
+      {/* Results Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {result?.Search?.map((movie) => (
-          <SearchMovieItem movie={movie} />
+          <div key={movie.imdbID} className="movie-item">
+            <SearchMovieItem movie={movie} />
+          </div>
         ))}
       </div>
 
@@ -106,7 +126,6 @@ export default function SearchPage() {
           </li>
         </ul>
       )}
-
     </div>
   );
 }

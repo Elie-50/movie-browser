@@ -11,8 +11,8 @@ import Poster from "@/components/movie-components/Poster";
 import gsap from "gsap";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useParams } from "react-router-dom";
-import { Spinner } from "@/components/ui/spinner";
 import { clearMovie, fetchMovie } from "@/redux/features/movies/movieSlice";
+import Loading from "@/components/Loading";
 
 export default function MovieDetailsPage() {
   const { imdbID } = useParams<{ imdbID: string }>();
@@ -58,7 +58,7 @@ export default function MovieDetailsPage() {
     }
   }, [showFullPoster]);
 
-  if (loading) return <div className="flex justify-center items-center h-screen mb-0"><Spinner className="h-20 w-20 text-blue-500" /></div>;
+  if (loading) return <Loading />;
   if (error) return <h1 className="text-center text-3xl p-6 text-red-500">{error}</h1>;
 
   if (!movie) return null;
