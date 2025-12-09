@@ -56,6 +56,7 @@ const searchSlice = createSlice({
       .addCase(searchMovies.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.result = null;
       })
       .addCase(searchMovies.fulfilled, (state, action: PayloadAction<OmdbSearchResponse>) => {
         state.loading = false;

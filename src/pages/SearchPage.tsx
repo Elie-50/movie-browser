@@ -5,6 +5,14 @@ import { searchMovies } from "@/redux/features/movies/searchSlice";
 import { useDebounce } from "use-debounce";
 import { Search } from "lucide-react";
 import { InputGroup, InputGroupInput, InputGroupAddon } from "@/components/ui/input-group";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+} from "@/components/ui/pagination";
 import SearchMovieItem from "@/components/movie-components/SearchMovieItem";
 import Loading from "@/components/Loading";
 import { gsap } from "gsap";
@@ -13,6 +21,32 @@ export default function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialQuery = searchParams.get("s") || "";
   const page = parseInt(searchParams.get("page") || "1", 10);
+
+  const getPages = (current: number, total: number) => {
+    const pages: (number | "...")[] = [];
+
+    if (total <= 7) {
+      // If small, show everything
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    pages.push(1); // first page always visible
+
+    if (current > 3) pages.push("...");
+
+    const start = Math.max(2, current - 1);
+    const end = Math.min(total - 1, current + 1);
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (current < total - 2) pages.push("...");
+
+    pages.push(total); // last page always visible
+
+    return pages;
+  };
 
   const [query, setQuery] = useState(initialQuery);
   const [debouncedQuery] = useDebounce(query, 1000);
@@ -85,47 +119,62 @@ export default function SearchPage() {
       </div>
 
       {/* Pagination */}
-      {result?.totalResults && parseInt(result.totalResults) > 10 && (
-        <ul className="flex mt-6 justify-center space-x-1">
-          <li>
-            <button
-              className="px-3 py-1 rounded bg-card hover:bg-primary hover:text-primary-foreground"
-              disabled={page === 1}
-              onClick={() => handlePageChange(page - 1)}
-            >
-              Prev
-            </button>
-          </li>
+      {result?.totalResults && parseInt(result.totalResults) > 10 && (() => {
+        const totalPages = Math.ceil(parseInt(result.totalResults) / 10);
+        const pages = getPages(page, totalPages);
 
-          {Array.from(
-            { length: Math.ceil(parseInt(result.totalResults) / 10) },
-            (_, i) => i + 1
-          ).map((p) => (
-            <li key={p}>
-              <button
-                onClick={() => handlePageChange(p)}
-                className={`px-3 py-1 rounded ${
-                  p === page
-                    ? "bg-primary text-primary-foreground font-bold"
-                    : "bg-card hover:bg-primary hover:text-primary-foreground"
-                }`}
-              >
-                {p}
-              </button>
-            </li>
-          ))}
+        return (
+          <Pagination className="mt-6 justify-center">
+            <PaginationContent>
 
-          <li>
-            <button
-              className="px-3 py-1 rounded bg-card hover:bg-primary hover:text-primary-foreground"
-              disabled={page === Math.ceil(parseInt(result.totalResults) / 10)}
-              onClick={() => handlePageChange(page + 1)}
-            >
-              Next
-            </button>
-          </li>
-        </ul>
-      )}
+              {/* Prev */}
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (page > 1) handlePageChange(page - 1);
+                  }}
+                  className={page === 1 ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
+
+              {/* Page links */}
+              {pages.map((p, i) => (
+                <PaginationItem key={i}>
+                  {p === "..." ? (
+                    <span className="px-2">…</span>
+                  ) : (
+                    <PaginationLink
+                      href="#"
+                      isActive={p === page}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handlePageChange(p as number);
+                      }}
+                    >
+                      {p}
+                    </PaginationLink>
+                  )}
+                </PaginationItem>
+              ))}
+
+              {/* Next */}
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (page < totalPages) handlePageChange(page + 1);
+                  }}
+                  className={page === totalPages ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
+
+            </PaginationContent>
+          </Pagination>
+        );
+      })()}
     </div>
   );
 }
