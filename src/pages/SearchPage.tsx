@@ -83,7 +83,7 @@ export default function SearchPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-4 mb-20">
-      <h1 className="text-3xl font-bold my-4">Results for "{debouncedQuery}"</h1>
+      <h1 className="text-3xl text-center font-bold my-4">Results for "{debouncedQuery}"</h1>
 
       {/* Search Input */}
       <div className="mb-6">
