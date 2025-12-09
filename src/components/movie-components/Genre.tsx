@@ -11,11 +11,12 @@ type Props = {
 function Genre({ genre }: Props) {
   const spanRef = useRef<HTMLSpanElement>(null);
 
-  const genres = genre.split(",").map((g) => g.trim());
 
   useEffect(() => {
     if (!spanRef.current) return;
     const el = spanRef.current;
+
+    const list = genre.split(",").map((g) => g.trim());
 
     const tl = gsap.timeline({
 			repeat: -1,
@@ -24,7 +25,7 @@ function Genre({ genre }: Props) {
 			},
 		});
 
-    genres.forEach((word) => {
+    list.forEach((word) => {
       // Type the genre
       tl.to(el, {
         duration: word.length * 0.15,
@@ -45,7 +46,7 @@ function Genre({ genre }: Props) {
       // Pause between genres
       tl.to({}, { duration: 0.5 });
     });
-  }, [genre, genres]);
+  }, [genre]);
 
   return (
     <span

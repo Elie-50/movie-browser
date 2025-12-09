@@ -3,8 +3,8 @@ import Homepage from "@/pages/Homepage";
 import SearchPage from "@/pages/SearchPage";
 import MovieDetailsPage from "@/pages/MovieDetailsPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import "./App.css";
 import { ThemeToggle } from "@/components/theme-toggle";
+import "./App.css";
 
 function App() {
   return (
