@@ -42,33 +42,5 @@ export const highestGrossingMovies: OmdbSearchMovie[] = [
 		"imdbID": "tt2488496",
 		"Type": "movie",
 		"Poster": "https://m.media-amazon.com/images/M/MV5BOTAzODEzNDAzMl5BMl5BanBnXkFtZTgwMDU1MTgzNzE@._V1_SX300.jpg"
-	},
-	{
-		"Title": "Avengers: Infinity War",
-		"Year": "2018",
-		"imdbID": "tt4154756",
-		"Type": "movie",
-		"Poster": "https://m.media-amazon.com/images/M/MV5BMjMxNjY2MDU1OV5BMl5BanBnXkFtZTgwNzY1MTUwNTM@._V1_SX300.jpg"
-	},
-	{
-		"Title": "Spider-Man: No Way Home",
-		"Year": "2021",
-		"imdbID": "tt10872600",
-		"Type": "movie",
-		"Poster": "https://m.media-amazon.com/images/M/MV5BMmFiZGZjMmEtMTA0Ni00MzA2LTljMTYtZGI2MGJmZWYzZTQ2XkEyXkFqcGc@._V1_SX300.jpg"
-	},
-	{
-		"Title": "Inside Out 2",
-		"Year": "2024",
-		"imdbID": "tt22022452",
-		"Type": "movie",
-		"Poster": "https://m.media-amazon.com/images/M/MV5BYWY3MDE2Y2UtOTE3Zi00MGUzLTg2MTItZjE1ZWVkMGVlODRmXkEyXkFqcGc@._V1_SX300.jpg"
-	},
-	{
-		"Title": "Jurassic World",
-		"Year": "2015",
-		"imdbID": "tt0369610",
-		"Type": "movie",
-		"Poster": "https://m.media-amazon.com/images/M/MV5BNzBhNzlkM2UtZTQyOC00NjUyLTkzMmMtNDQ1YTM5N2NmMGE5XkEyXkFqcGc@._V1_SX300.jpg"
-	},
+	}
 ];
